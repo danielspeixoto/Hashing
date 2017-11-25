@@ -15,14 +15,12 @@ class Hashing {
         int size;
         string filepath;
         explicit Hashing(int size, string filepath);
-        virtual string getFilepath() {
-            return "hash.txt";
-        };
-        void writeToFile(string content);
         virtual void insert(Node node) {};
-        void read();
+        virtual void read() {};
         static void printFile(string path);
         void setup();
+        Node getItem(int position);
+        void setItem(Node node, int position);
 };
 
 

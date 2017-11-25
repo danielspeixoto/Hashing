@@ -11,8 +11,9 @@ using namespace std;
 
 class Node {
     public:
+        static const char* empty;
         int key;
-        char* name;
+        char name[20];
         int age;
         int next = -1;
         int isEmpty = false;

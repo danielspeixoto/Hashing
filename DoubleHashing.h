@@ -14,11 +14,13 @@ class DoubleHashing : public Hashing {
 public:
 
     void insert(Node node) override;
+    void read() override;
 
     int h1(int key);
     int h2(int key);
 
     explicit DoubleHashing(int size) : Hashing(size, DOUBLE_HASHING_FILE) {}
+
 };
 
 

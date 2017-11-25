@@ -33,6 +33,9 @@ void operate(Hashing *hash) {
                 hash->insert(Node(keyValue, (char*) name.c_str(), age));
                 break;
             case READ:
+                int index;
+                cin >> index;
+                hash->getItem(index);
                 break;
             case REMOVE:
                 break;

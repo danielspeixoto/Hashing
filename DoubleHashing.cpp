@@ -3,16 +3,35 @@
 //
 
 #include <iostream>
+#include <fstream>
 #include "DoubleHashing.h"
 
 using namespace std;
 
 void DoubleHashing::insert(Node node) {
-//    string filepath = getFilepath();
-//    FILE* pFile = fopen(getFilepath().c_str(), "wb");
-//    const char *buffer = content.c_str();
-//    fwrite (buffer , sizeof(char), sizeof(buffer), pFile);
-//    fclose (pFile);
+    int position = this->h1(node.key);
+    int counter = 0;
+    while(!this->getItem(position).isEmpty) {
+        position = (position + this->h2(node.key)) % this->size;
+        counter++;
+        if(counter > this->size) {
+            cout << "Node cannot be inserted";
+            return;
+        }
+    }
+    setItem(node, position);
+}
+
+void DoubleHashing::read() {
+    for(int i = 0; i < this->size; i++) {
+        cout << i << ": ";
+        Node node = this->getItem(i);
+        if(node.isEmpty) {
+            cout << Node::empty << endl;
+        } else {
+            cout << node.hashingFormat() << endl;
+        }
+    }
 }
 
 int DoubleHashing::h1(int key) {
