@@ -4,6 +4,6 @@
 
 #include "LinkedHashing.h"
 
-void LinkedHashing::insert(Node node) {
-
+int LinkedHashing::position_calculator(int current, int key) {
+    return 0;
 }

@@ -9,15 +9,9 @@
 #include <iostream>
 #include <bits/types/FILE.h>
 #include <cstring>
+#include <tuple>
 
 using namespace std;
-
-void Hashing::printFile(string path) {
-    ifstream stream(path);
-    if(stream.is_open()) {
-        cout << stream.rdbuf();
-    }
-}
 
 Hashing::Hashing(int size, string filepath) {
     this->size = size;
@@ -25,26 +19,102 @@ Hashing::Hashing(int size, string filepath) {
     setup();
 }
 
+bool is_same_key2(Node node, int key) {
+    return !node.is_empty && node.key != key;
+}
+
+// Main Functions
+Node Hashing::search(int key) {
+    return get<1>(search(key, this->is_same_key ));
+}
+
+void Hashing::insert(Node node) {
+    //TODO Use do_upon_node_existence
+    int position = get<0>(search(node.key, this->not_empty_node));
+    if(position != -1) {
+        set_item(node, position);
+    }
+}
+
+bool Hashing::remove(int key) {
+    do_upon_node_existence(key,
+                           this->delete_item,
+                           this->item_not_found);
+}
+
+// Answer type functions
+bool Hashing::is_same_key(Node node, int key) {
+    return !node.is_empty && node.key != key;
+}
+
+bool Hashing::not_empty_node(Node node, int key) {
+    return !node.is_empty;
+}
+
+void Hashing::item_not_found(int position, int key) {
+    cout << "chave não encontrada " << key << endl;
+}
+
+//TODO Fix this
+void Hashing::delete_item(int position, int key, Node node) {
+//    set_item(Node::empty_node(), position);
+}
+
+// Advanced
+tuple<int, Node> Hashing::item_and_position_from_key(int key) {
+    return search(key, this->is_same_key);
+}
+
+// Receives key to be used to find positions, and criteria
+// that will identify proper position, if exists
+tuple<int, Node> Hashing::search(
+        int key,
+        bool(* criteria)(Node, int) ) {
+
+    int position = position_calculator(-1, key);
+    int counter = 0;
+    Node node = get_item(position);
+    while(criteria(node, key)) {
+        position = position_calculator(position, key);
+        counter++;
+        // Has searched entire file
+        if(counter > this->size) {
+            return make_tuple(-1, Node::empty_node());
+        }
+        node = get_item(position);
+    }
+    return make_tuple(position, node);
+}
+
+void Hashing::do_upon_node_existence(
+        int key,
+        void(* success_operation)(int, int, Node),
+        void(* failure_operation)(int, int)) {
+
+    int position = position_from_key(key);
+    if(position != -1) {
+        success_operation(position, key, get_item(position));
+    }
+    failure_operation(position, key);
+}
+
+// Config
 void Hashing::setup() {
     // Check if file exists
     if(!ifstream(filepath)) {
         fstream file(filepath, ios::binary | ios::app);
         if(file.is_open()) {
-            char name[20];
-            strcpy(name, Node::empty);
-            Node empty = Node(0, name, 0);
-            empty.isEmpty = true;
             for(int i = 0; i < this->size; i++) {
-                Node empty = Node(i, name, i);
-                empty.isEmpty = true;
-                file.write((char*) &empty, sizeof(Node));
+                Node node = Node::empty_node();
+                file.write((char*) &node, sizeof(Node));
             }
             file.close();
         }
     }
 }
 
-Node Hashing::getItem(int position) {
+// File manipulation
+Node Hashing::get_item(int position) {
     ifstream file(filepath, ios::binary);
     Node* searched = (Node*) malloc(sizeof(Node));
     if(file.is_open()) {
@@ -55,7 +125,7 @@ Node Hashing::getItem(int position) {
     return *searched;
 }
 
-void Hashing::setItem(Node node, int position) {
+void Hashing::set_item(Node node, int position) {
     fstream file(filepath, ios::binary|ios::in|ios::out);
     if(file.is_open()) {
         file.seekp(sizeof(Node) * position, ios_base::beg);

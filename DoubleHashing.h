@@ -12,16 +12,14 @@ const string DOUBLE_HASHING_FILE = "doubleHashingFile.bin";
 
 class DoubleHashing : public Hashing {
 public:
-
-    void insert(Node node) override;
+    explicit DoubleHashing(int size) : Hashing(size,
+                                               DOUBLE_HASHING_FILE) {}
     void read() override;
 
+private:
     int h1(int key);
     int h2(int key);
-
-    explicit DoubleHashing(int size) : Hashing(size, DOUBLE_HASHING_FILE) {}
-
-};
-
+    int position_calculator(int current, int key) override;
+ };
 
 #endif //HASHING_DOUBLEHASHING_H

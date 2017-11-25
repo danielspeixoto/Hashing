@@ -17,7 +17,7 @@ using namespace std;
 #define END 'e'
 
 void operate(Hashing *hash) {
-    int keyValue;
+    int key;
     string name;
     int age;
 
@@ -26,20 +26,27 @@ void operate(Hashing *hash) {
     while(operation != END) {
         switch(operation) {
             case INSERT:
-                cin >> keyValue;
+                cin >> key;
                 cin.ignore();
                 getline(cin, name);
                 cin >> age;
-                hash->insert(Node(keyValue, (char*) name.c_str(), age));
+                hash->insert(Node(key,
+                                  (char*) name.c_str(),
+                                  age));
                 break;
             case READ:
-                int index;
-                cin >> index;
-                hash->getItem(index);
+                cin >> key;
+                hash->search(key);
                 break;
             case REMOVE:
+                cin >> key;
+                if(!hash->remove(key)) {
+                    cout << "chave não encontrada "
+                         << key << endl;
+                }
                 break;
             case TIME_SPENT:
+//                cout << hash->time_spent();
                 break;
             default: // Print
                 hash->read();

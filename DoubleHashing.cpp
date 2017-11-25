@@ -4,29 +4,16 @@
 
 #include <iostream>
 #include <fstream>
+#include <tuple>
 #include "DoubleHashing.h"
 
 using namespace std;
 
-void DoubleHashing::insert(Node node) {
-    int position = this->h1(node.key);
-    int counter = 0;
-    while(!this->getItem(position).isEmpty) {
-        position = (position + this->h2(node.key)) % this->size;
-        counter++;
-        if(counter > this->size) {
-            cout << "Node cannot be inserted";
-            return;
-        }
-    }
-    setItem(node, position);
-}
-
 void DoubleHashing::read() {
     for(int i = 0; i < this->size; i++) {
         cout << i << ": ";
-        Node node = this->getItem(i);
-        if(node.isEmpty) {
+        Node node = this->get_item(i);
+        if(node.is_empty) {
             cout << Node::empty << endl;
         } else {
             cout << node.hashingFormat() << endl;
@@ -35,14 +22,21 @@ void DoubleHashing::read() {
 }
 
 int DoubleHashing::h1(int key) {
-    return key % DoubleHashing::size;
+    return key % size;
 }
 
 int DoubleHashing::h2(int key) {
-    int answer = key / this->size;
+    int answer = key / size;
     if(answer == 0) {
         return 1;
     }
     return answer;
 }
 
+int DoubleHashing::position_calculator(int current, int key) {
+    if(current == -1) {
+        return h1(key);
+    } else {
+        return (current + h2(key)) % size;
+    }
+}

@@ -12,12 +12,12 @@ using namespace std;
 
 
 class LinkedHashing : public Hashing {
-    public:
-        const string LINKED_HASHING_FILE = "linkedHashingFile.txt";
+public:
+    const string LINKED_HASHING_FILE = "linkedHashingFile.txt";
+    explicit LinkedHashing(int size) : Hashing(size, LINKED_HASHING_FILE) {}
 
-        void insert(Node node) override;
-
-        explicit LinkedHashing(int size) : Hashing(size, LINKED_HASHING_FILE) {}
+private:
+    int position_calculator(int current, int key) override;
 };
 
 

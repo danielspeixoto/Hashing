@@ -16,9 +16,10 @@ class Node {
         char name[20];
         int age;
         int next = -1;
-        int isEmpty = false;
+        bool is_empty = false;
         Node(int key, char* name, int age);
         string hashingFormat();
+        static Node empty_node();
 };
 
 
