@@ -3,8 +3,6 @@
 //
 
 #include <iostream>
-#include <fstream>
-#include <tuple>
 #include "DoubleHashing.h"
 
 using namespace std;
@@ -21,6 +19,21 @@ void DoubleHashing::read() {
     }
 }
 
+bool DoubleHashing::remove(int key) {
+    int position = item_position(key);
+    if(position == -1) return false;
+    delete_item(position);
+    return true;
+}
+
+int DoubleHashing::search_calculator(int current, int key, Node node) {
+    if(current == -1) {
+        return h1(key);
+    } else {
+        return (current + h2(key)) % size;
+    }
+}
+
 int DoubleHashing::h1(int key) {
     return key % size;
 }
@@ -31,12 +44,4 @@ int DoubleHashing::h2(int key) {
         return 1;
     }
     return answer;
-}
-
-int DoubleHashing::position_calculator(int current, int key) {
-    if(current == -1) {
-        return h1(key);
-    } else {
-        return (current + h2(key)) % size;
-    }
 }

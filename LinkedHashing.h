@@ -8,17 +8,20 @@
 #include "Hashing.h"
 #include <iostream>
 
-using namespace std;
+#define LINKED_HASHING_FILE "linkedHashingFile.bin"
 
+using namespace std;
 
 class LinkedHashing : public Hashing {
 public:
-    const string LINKED_HASHING_FILE = "linkedHashingFile.txt";
+
     explicit LinkedHashing(int size) : Hashing(size, LINKED_HASHING_FILE) {}
+    bool remove(int key) override;
+    void read() override;
 
 private:
-    int position_calculator(int current, int key) override;
+    int search_calculator(int current, int key, Node node) override;
+    int insert_calculator(int current, int key, Node node) override;
 };
-
 
 #endif //HASHING_LINKEDHASHING_H

@@ -10,6 +10,7 @@
 #include <bits/types/FILE.h>
 #include <cstring>
 #include <tuple>
+#include <functional>
 
 using namespace std;
 
@@ -19,30 +20,37 @@ Hashing::Hashing(int size, string filepath) {
     setup();
 }
 
-bool is_same_key2(Node node, int key) {
-    return !node.is_empty && node.key != key;
-}
-
 // Main Functions
 Node Hashing::search(int key) {
-    return get<1>(search(key, this->is_same_key ));
+    return get<1>(search(key, this->is_same_key));
 }
 
+//TODO Change calculator
 void Hashing::insert(Node node) {
-    //TODO Use do_upon_node_existence
-    int position = get<0>(search(node.key, this->not_empty_node));
+    int position = get<0>(search(node.key,
+                                 this->not_empty_node,
+                                 &Hashing::insert_calculator));
     if(position != -1) {
         set_item(node, position);
     }
 }
 
-bool Hashing::remove(int key) {
-    do_upon_node_existence(key,
-                           this->delete_item,
-                           this->item_not_found);
+double Hashing::time_spent() {
+    int amount = 0;
+    Node node = Node::empty_node();
+    int items_count = 0;
+    for(int i = 0; i < size; i++) {
+        node = get_item(i);
+        if(!node.is_empty) {
+            items_count++;
+            amount += time_spent(node.key);
+        }
+    }
+    return amount/(double)items_count;
 }
 
-// Answer type functions
+
+// Search type functions
 bool Hashing::is_same_key(Node node, int key) {
     return !node.is_empty && node.key != key;
 }
@@ -51,51 +59,39 @@ bool Hashing::not_empty_node(Node node, int key) {
     return !node.is_empty;
 }
 
-void Hashing::item_not_found(int position, int key) {
-    cout << "chave não encontrada " << key << endl;
-}
-
-//TODO Fix this
-void Hashing::delete_item(int position, int key, Node node) {
-//    set_item(Node::empty_node(), position);
-}
-
 // Advanced
-tuple<int, Node> Hashing::item_and_position_from_key(int key) {
-    return search(key, this->is_same_key);
+void Hashing::delete_item(int position) {
+    set_item(Node::empty_node(), position);
 }
 
+int Hashing::item_position(int key) {
+    return get<0>(search(key, this->is_same_key ));
+}
+
+int Hashing::time_spent(int key) {
+    return get<2>(search(key, this->is_same_key ));
+}
 // Receives key to be used to find positions, and criteria
 // that will identify proper position, if exists
-tuple<int, Node> Hashing::search(
+// Returns position, node at position and amount of iterations to find
+tuple<int, Node, int> Hashing::search(
         int key,
-        bool(* criteria)(Node, int) ) {
+        bool(* criteria)(Node, int),
+        int(Hashing::* position_calculator)(int, int, Node)) {
 
-    int position = position_calculator(-1, key);
-    int counter = 0;
+    int position = (this->*position_calculator)(-1, key, Node::empty_node());
     Node node = get_item(position);
+    int counter = 1;
     while(criteria(node, key)) {
-        position = position_calculator(position, key);
-        counter++;
+        position = (this->*position_calculator)(position, key, node);
         // Has searched entire file
-        if(counter > this->size) {
-            return make_tuple(-1, Node::empty_node());
+        if(counter > this->size || position == -1) {
+            return make_tuple(-1, Node::empty_node(), counter);
         }
         node = get_item(position);
+        counter++;
     }
-    return make_tuple(position, node);
-}
-
-void Hashing::do_upon_node_existence(
-        int key,
-        void(* success_operation)(int, int, Node),
-        void(* failure_operation)(int, int)) {
-
-    int position = position_from_key(key);
-    if(position != -1) {
-        success_operation(position, key, get_item(position));
-    }
-    failure_operation(position, key);
+    return make_tuple(position, node, counter);
 }
 
 // Config

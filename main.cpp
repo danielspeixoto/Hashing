@@ -10,13 +10,15 @@ using namespace std;
 #define DOUBLE_HASHING 'd'
 
 #define INSERT 'i'
-#define READ 'c'
+#define SEARCH 'c'
 #define REMOVE 'r'
 #define PRINT 'p'
 #define TIME_SPENT 'm'
 #define END 'e'
 
 void operate(Hashing *hash) {
+    Node node = Node::empty_node();
+
     int key;
     string name;
     int age;
@@ -34,19 +36,28 @@ void operate(Hashing *hash) {
                                   (char*) name.c_str(),
                                   age));
                 break;
-            case READ:
+            case SEARCH:
                 cin >> key;
-                hash->search(key);
+                node = hash->search(key);
+                if(node.is_empty) {
+                    cout << "chave não encontrada: "
+                         << key << endl;
+                } else {
+                    cout << "chave: " << key << endl;
+                    cout << node.name << endl;
+                    cout << node.age << endl;
+                }
                 break;
             case REMOVE:
                 cin >> key;
                 if(!hash->remove(key)) {
-                    cout << "chave não encontrada "
+                    cout << "chave não encontrada: "
                          << key << endl;
                 }
                 break;
             case TIME_SPENT:
-//                cout << hash->time_spent();
+                //TODO
+                printf("%.2f", hash->time_spent());
                 break;
             default: // Print
                 hash->read();
