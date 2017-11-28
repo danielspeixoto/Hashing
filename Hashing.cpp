@@ -22,14 +22,13 @@ Hashing::Hashing(int size, string filepath) {
 
 // Main Functions
 Node Hashing::search(int key) {
-    return get<1>(search(key, this->is_same_key));
+    return get<1>(search_data(key, &Hashing::is_same_key));
 }
 
-//TODO Change calculator
 void Hashing::insert(Node node) {
-    int position = get<0>(search(node.key,
-                                 this->not_empty_node,
-                                 &Hashing::insert_calculator));
+    int position = get<0>(search_data(node.key,
+                                      &Hashing::not_empty_node,
+                                      &Hashing::insert_calculator));
     if(position != -1) {
         set_item(node, position);
     }
@@ -52,11 +51,15 @@ double Hashing::time_spent() {
 
 // Search type functions
 bool Hashing::is_same_key(Node node, int key) {
-    return !node.is_empty && node.key != key;
+    return !node.is_empty && node.key == key;
 }
 
 bool Hashing::not_empty_node(Node node, int key) {
-    return !node.is_empty;
+    return node.is_empty;
+}
+
+bool Hashing::previous_node(Node node, int key) {
+    return get_item(node.next).key == key;
 }
 
 // Advanced
@@ -65,24 +68,24 @@ void Hashing::delete_item(int position) {
 }
 
 int Hashing::item_position(int key) {
-    return get<0>(search(key, this->is_same_key ));
+    return get<0>(search_data(key, &Hashing::is_same_key));
 }
 
 int Hashing::time_spent(int key) {
-    return get<2>(search(key, this->is_same_key ));
+    return get<2>(search_data(key, &Hashing::is_same_key));
 }
 // Receives key to be used to find positions, and criteria
 // that will identify proper position, if exists
 // Returns position, node at position and amount of iterations to find
-tuple<int, Node, int> Hashing::search(
+tuple<int, Node, int> Hashing::search_data(
         int key,
-        bool(* criteria)(Node, int),
+        bool(Hashing::* criteria)(Node, int),
         int(Hashing::* position_calculator)(int, int, Node)) {
 
     int position = (this->*position_calculator)(-1, key, Node::empty_node());
     Node node = get_item(position);
     int counter = 1;
-    while(criteria(node, key)) {
+    while(!(this->*criteria)(node, key)) {
         position = (this->*position_calculator)(position, key, node);
         // Has searched entire file
         if(counter > this->size || position == -1) {

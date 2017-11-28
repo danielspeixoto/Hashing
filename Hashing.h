@@ -21,6 +21,7 @@ public:
     Node search(int key);
     double time_spent();
     int time_spent(int key);
+    bool previous_node(Node node, int key);
 
 protected:
     int size;
@@ -30,21 +31,21 @@ protected:
     virtual int insert_calculator(int current,
                                   int key,
                                   Node node) = 0;
+    bool is_same_key(Node node, int key);
+    bool not_empty_node(Node node, int key);
     Node get_item(int position);
     void set_item(Node node, int position);
     void delete_item(int position);
     int item_position(int key);
+    tuple<int, Node, int> search_data(
+            int key,
+            bool (Hashing::*criteria)(Node, int) = &Hashing::is_same_key,
+            int (Hashing::*position_calculator)(int, int, Node) = &Hashing::search_calculator);
 
 private:
-    static bool is_same_key(Node node, int key);
-    static bool not_empty_node(Node node, int key);
     void setup();
     string filepath;
 
-    tuple<int, Node, int> search(
-            int key,
-            bool (*criteria)(Node, int),
-            int (Hashing::*position_calculator)(int, int, Node) = &Hashing::search_calculator);
 };
 
 

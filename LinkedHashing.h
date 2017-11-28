@@ -22,6 +22,8 @@ public:
 private:
     int search_calculator(int current, int key, Node node) override;
     int insert_calculator(int current, int key, Node node) override;
+
+    int getLastEmptyPosition(int lastPosition);
 };
 
 #endif //HASHING_LINKEDHASHING_H

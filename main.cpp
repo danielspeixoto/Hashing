@@ -56,7 +56,6 @@ void operate(Hashing *hash) {
                 }
                 break;
             case TIME_SPENT:
-                //TODO
                 printf("%.2f", hash->time_spent());
                 break;
             default: // Print
