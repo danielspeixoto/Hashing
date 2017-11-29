@@ -15,24 +15,19 @@ public:
     explicit Hashing(int size,
                      string filepath);
 
-    virtual void insert(Node node);
+    virtual bool insert(Node node) {};
     virtual bool remove(int key) {};
     virtual void read() {};
     Node search(int key);
     double time_spent();
     int time_spent(int key);
     bool previous_node(Node node, int key);
-
-protected:
+    bool not_empty_node(Node node, int key);
     int size;
     virtual int search_calculator(int current,
                                   int key,
                                   Node node) = 0;
-    virtual int insert_calculator(int current,
-                                  int key,
-                                  Node node) = 0;
     bool is_same_key(Node node, int key);
-    bool not_empty_node(Node node, int key);
     Node get_item(int position);
     void set_item(Node node, int position);
     void delete_item(int position);

@@ -25,7 +25,6 @@ void LinkedHashing::read() {
     }
 }
 
-//TODO Test
 bool LinkedHashing::remove(int key) {
     int nodeClass = key % size;
     tuple<int, Node, int> search = search_data(key);
@@ -43,8 +42,9 @@ bool LinkedHashing::remove(int key) {
             delete_item(node.next);
         }
     } else {
-        tuple<int, Node, int> search_previous = search_data(key,
-                                                            &Hashing::previous_node);
+        tuple<int, Node, int> search_previous =
+                search_data(key,
+                            &Hashing::previous_node);
         int previous_position = get<0>(search_previous);
         Node previous = get<1>(search_previous);
         previous.next = node.next;
@@ -54,7 +54,7 @@ bool LinkedHashing::remove(int key) {
     return true;
 }
 
-int LinkedHashing::getLastEmptyPosition(int lastPosition) {
+int LinkedHashing::get_last_empty_position(int lastPosition) {
     while(!get_item(lastPosition).is_empty) {
         lastPosition--;
         if(lastPosition < 0) {
@@ -65,28 +65,50 @@ int LinkedHashing::getLastEmptyPosition(int lastPosition) {
     return lastPosition;
 }
 
-//TODO
-int LinkedHashing::insert_calculator(int current, int key, Node node) {
-    if(current == -1) {
-        return key % size;
-    }
-    if(node.next != -1) {
-        if(node.key % size != key % size) {
-            //TODO
-            remove(current);
-            int position = getLastEmptyPosition(size - 1);
-            if(position == current) {
-                position = getLastEmptyPosition(current - 1);
-            }
-            set_item(node, position);
-            return current;
-        }
-        return node.next;
+bool LinkedHashing::insert(Node node) {
+    int position = node.key % size;
+    Node searched = get_item(position);
+
+    if(searched.is_empty) {
+        set_item(node, position);
+        return true;
     }
 
-    node.next = getLastEmptyPosition(size - 1);
-    set_item(node, current);
-    return node.next;
+    if(searched.key % size != node.key % size) {
+        tuple<int, Node, int> search_previous =
+                search_data(searched.key,
+                            &Hashing::previous_node);
+        int previous_position = get<0>(search_previous);
+        Node previous = get<1>(search_previous);
+
+        int searched_new_position =
+                get_last_empty_position(size - 1);
+        previous.next = searched_new_position;
+        // Updates previous item that points to searched
+        set_item(previous, previous_position);
+        // Moves searched
+        set_item(searched, searched_new_position);
+        // Inserts
+        set_item(node, position);
+        return true;
+    }
+
+    if(searched.key == node.key) {
+        return false;
+    }
+    while(searched.next != -1) {
+        position = searched.next;
+        searched = get_item(position);
+        if(searched.key == node.key) {
+            return false;
+        }
+    }
+    int last_position = get_last_empty_position(size - 1);
+    searched.next = last_position;
+    // Updates previous node
+    set_item(searched, position);
+    // Inserts
+    set_item(node, last_position);
 }
 
 int LinkedHashing::search_calculator(int current, int key, Node node) {

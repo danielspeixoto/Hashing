@@ -16,14 +16,13 @@ public:
                                                DOUBLE_HASHING_FILE) {}
     void read() override;
     bool remove(int key) override;
+    bool insert(Node node) override;
 
 private:
     int h1(int key);
     int h2(int key);
     int search_calculator(int current, int key, Node node) override;
-    int insert_calculator(int current, int key, Node node) {
-        return search_calculator(current, key, node);
-    };
- };
+
+};
 
 #endif //HASHING_DOUBLEHASHING_H

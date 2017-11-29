@@ -3,9 +3,22 @@
 //
 
 #include <iostream>
+#include <tuple>
 #include "DoubleHashing.h"
 
 using namespace std;
+
+bool DoubleHashing::insert(Node node) {
+    //TODO Check if there is node with same key
+    int position = get<0>(search_data(node.key,
+                                      &Hashing::not_empty_node,
+                                      &Hashing::search_calculator));
+    if(position != -1) {
+        set_item(node, position);
+        return true;
+    }
+    return false;
+}
 
 void DoubleHashing::read() {
     for(int i = 0; i < this->size; i++) {
@@ -30,6 +43,9 @@ int DoubleHashing::search_calculator(int current, int key, Node node) {
     if(current == -1) {
         return h1(key);
     } else {
+        if(node.key == key) {
+            return -1;
+        }
         return (current + h2(key)) % size;
     }
 }

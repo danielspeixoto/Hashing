@@ -32,9 +32,13 @@ void operate(Hashing *hash) {
                 cin.ignore();
                 getline(cin, name);
                 cin >> age;
-                hash->insert(Node(key,
-                                  (char*) name.c_str(),
-                                  age));
+                if(!hash->insert(
+                        Node(key,
+                             (char*) name.c_str(),
+                             age))) {
+                    cout << "chave já existente: "
+                         << key << endl;
+                }
                 break;
             case SEARCH:
                 cin >> key;
@@ -56,7 +60,7 @@ void operate(Hashing *hash) {
                 }
                 break;
             case TIME_SPENT:
-                printf("%.2f", hash->time_spent());
+                printf("%.1f", hash->time_spent());
                 break;
             default: // Print
                 hash->read();

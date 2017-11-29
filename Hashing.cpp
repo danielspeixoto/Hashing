@@ -25,15 +25,6 @@ Node Hashing::search(int key) {
     return get<1>(search_data(key, &Hashing::is_same_key));
 }
 
-void Hashing::insert(Node node) {
-    int position = get<0>(search_data(node.key,
-                                      &Hashing::not_empty_node,
-                                      &Hashing::insert_calculator));
-    if(position != -1) {
-        set_item(node, position);
-    }
-}
-
 double Hashing::time_spent() {
     int amount = 0;
     Node node = Node::empty_node();

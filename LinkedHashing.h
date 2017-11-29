@@ -18,12 +18,12 @@ public:
     explicit LinkedHashing(int size) : Hashing(size, LINKED_HASHING_FILE) {}
     bool remove(int key) override;
     void read() override;
+    bool insert(Node node) override;
 
 private:
     int search_calculator(int current, int key, Node node) override;
-    int insert_calculator(int current, int key, Node node) override;
 
-    int getLastEmptyPosition(int lastPosition);
+    int get_last_empty_position(int lastPosition);
 };
 
 #endif //HASHING_LINKEDHASHING_H
