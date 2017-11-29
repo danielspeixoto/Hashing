@@ -9,11 +9,13 @@
 using namespace std;
 
 bool DoubleHashing::insert(Node node) {
+    // Verifies if key already exists
     if(!search(node.key).is_empty) {
         return false;
     }
+    // Looks for appropriate position
     int position = get<0>(search_data(node.key,
-                                      &Hashing::not_empty_node,
+                                      &Hashing::empty_node,
                                       &Hashing::search_calculator));
     if(position != -1) {
         set_item(node, position);
@@ -57,7 +59,7 @@ int DoubleHashing::h1(int key) {
 }
 
 int DoubleHashing::h2(int key) {
-    int answer = key / size;
+    int answer = (key / size) % size;
     if(answer == 0) {
         return 1;
     }

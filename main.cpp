@@ -1,3 +1,9 @@
+/*
+ * Projeto por Daniel Santos Peixoto
+ * Implementação de Hashing Duplo e
+ * Resolução de colisões por encadeamento
+ */
+
 #include <fstream>
 #include "Hashing.h"
 #include "DoubleHashing.h"

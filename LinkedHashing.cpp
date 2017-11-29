@@ -42,6 +42,9 @@ bool LinkedHashing::remove(int key) {
             delete_item(node.next);
         }
     } else {
+        // Previous element points now to the
+        // same value that the current element
+        // used to point
         tuple<int, Node, int> search_previous =
                 search_data(key,
                             &Hashing::previous_node);
@@ -74,6 +77,8 @@ bool LinkedHashing::insert(Node node) {
         return true;
     }
 
+    // Node at position is not of the same class
+    // and needs to be moved
     if(searched.key % size != node.key % size) {
         tuple<int, Node, int> search_previous =
                 search_data(searched.key,

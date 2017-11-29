@@ -45,7 +45,7 @@ bool Hashing::is_same_key(Node node, int key) {
     return !node.is_empty && node.key == key;
 }
 
-bool Hashing::not_empty_node(Node node, int key) {
+bool Hashing::empty_node(Node node, int key) {
     return node.is_empty;
 }
 
@@ -67,6 +67,7 @@ int Hashing::time_spent(int key) {
 }
 // Receives key to be used to find positions, and criteria
 // that will identify proper position, if exists
+
 // Returns position, node at position and amount of iterations to find
 tuple<int, Node, int> Hashing::search_data(
         int key,
@@ -94,6 +95,7 @@ void Hashing::setup() {
     if(!ifstream(filepath)) {
         fstream file(filepath, ios::binary | ios::app);
         if(file.is_open()) {
+            // Fills file with empty nodes
             for(int i = 0; i < this->size; i++) {
                 Node node = Node::empty_node();
                 file.write((char*) &node, sizeof(Node));

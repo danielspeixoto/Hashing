@@ -22,7 +22,7 @@ public:
     double time_spent();
     int time_spent(int key);
     bool previous_node(Node node, int key);
-    bool not_empty_node(Node node, int key);
+    bool empty_node(Node node, int key);
     int size;
     virtual int search_calculator(int current,
                                   int key,
