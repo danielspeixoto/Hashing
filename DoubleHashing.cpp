@@ -9,7 +9,9 @@
 using namespace std;
 
 bool DoubleHashing::insert(Node node) {
-    //TODO Check if there is node with same key
+    if(!git search(node.key).is_empty) {
+        return false;
+    }
     int position = get<0>(search_data(node.key,
                                       &Hashing::not_empty_node,
                                       &Hashing::search_calculator));
